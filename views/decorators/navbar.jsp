@@ -20,13 +20,18 @@
                 </ul>
                 <ul class="nav navbar-top-links navbar-right pull-right">
                     <li>
-                    <div class="dropdown">
-						  	<a class="profile-pic btn dropdown-toggle" type="button" data-toggle="dropdown"> <img src='<c:url value="/assets/plugins/images/users/varun.jpg"/>' alt="user-img"
-                                width="36" class="img-circle"><b class="hidden-xs">${USER_LOGIN.roleName}</b>
-						  <span class="caret"></span> </a>
+	                    <div class="dropdown">
+						  <a href="javascript:void(0)" class="dropdown-toggle profile-pic" data-toggle="dropdown">
+						  	<img src='<c:url value="/assets/plugins/images/users/varun.jpg"/>' alt="user-img"
+                                width="36" class="img-circle">
+                                <b class="hidden-xs">
+						  			${ USER_LOGIN.roleName }
+						  		</b>
+						  	<span class="caret"></span>
+						  </a>
 						  <ul class="dropdown-menu">
-						    <li><a href="<c:url value="/user/details"/>">Profile</a></li>
-						    <li><a href="<c:url value="/logout"/>">Logout</a></li>
+						    <li><a href="#">Thông tin cá nhân</a></li>
+						    <li><a href='<c:url value="/logout" />'>Đăng xuất</a></li>
 						  </ul>
 						</div>
                     </li>

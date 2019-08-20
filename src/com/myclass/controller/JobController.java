@@ -2,8 +2,6 @@ package com.myclass.controller;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,82 +10,118 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.myclass.constants.UrlConstants;
-import com.myclass.dao.JobDao;
-import com.myclass.entity.Job;
+import org.mindrot.jbcrypt.BCrypt;
 
-@WebServlet(name = "JobServlet", urlPatterns = {UrlConstants.JOB_DETAILS, UrlConstants.JOB_ADD, UrlConstants.JOB_LIST, UrlConstants.JOB_DELETE, UrlConstants.JOB_EDIT})
+import com.myclass.constants.UrlConstants;
+import com.myclass.dao.JobDAO;
+import com.myclass.dao.TaskDAO;
+import com.myclass.entity.Job;
+import com.myclass.entity.Task;
+import com.myclass.entity.User;
+
+@WebServlet(name = "JobServlet", 
+	urlPatterns = {UrlConstants.JOB_LIST, UrlConstants.JOB_ADD, UrlConstants.JOB_EDIT, UrlConstants.JOB_DETAIL, UrlConstants.JOB_DELETE })
 public class JobController extends HttpServlet{
-	private JobDao jobDao;
+	
+	private static final long serialVersionUID = 1L;
+	
+	private JobDAO jobDAO = null;
+	private TaskDAO taskDAO = null;
 	
 	public JobController() {
-		jobDao = new JobDao();
+		jobDAO = new JobDAO();
+		taskDAO = new TaskDAO();
 	}
+	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
 		String action = req.getServletPath();
 		switch (action) {
 		case UrlConstants.JOB_LIST:
-			getJobs(req, resp);
+			req.setAttribute("jobs", jobDAO.findAll());
+			req.getRequestDispatcher("/views/job/index.jsp").forward(req, resp);
+			break;
+		case UrlConstants.JOB_ADD:
+			req.getRequestDispatcher("/views/job/add.jsp").forward(req, resp);
 			break;
 		case UrlConstants.JOB_EDIT:
-			editJob(req, resp);
+			getEdit(req, resp);
 			break;
-
-		case UrlConstants.JOB_ADD:
-			
+		case UrlConstants.JOB_DETAIL:
+			getJobDetails(req, resp);
 			break;
-
 		case UrlConstants.JOB_DELETE:
-			
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void getJobDetails(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int id = Integer.parseInt(req.getParameter("id"));
+		Job job = jobDAO.findById(id);
+		req.setAttribute("job", job);
+		List<Task> tasks = taskDAO.findByJobId(id);
+		req.setAttribute("tasks", tasks);
+		select j.name as job_name,
+		t.name as task_name, t.start_date as job_start_date,
+		u.fullname as user_name,
+		s.name as status_name
+		 from jobs as j inner join tasks as t on t.job_id = j.id 
+		 inner join users as u on t.user_id = u.id 
+		 inner join status as s on t.status_id = s.id
+		 where j.id = 1;
+		req.getRequestDispatcher("/views/job/details.jsp").forward(req, resp);
+	}
+
+	private void getEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		int id = Integer.parseInt(req.getParameter("id"));
+		Job job = jobDAO.findById(id);
+		req.setAttribute("job", job);
+		req.getRequestDispatcher("/views/job/edit.jsp").forward(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
+		String action = req.getServletPath();
+		switch (action) {
+		case UrlConstants.JOB_ADD:
+			postAdd(req, resp);
+			break;
+		case UrlConstants.JOB_EDIT:
+			postEdit(req, resp);
 			break;
 		default:
 			break;
 		}
 	}
 	
-	private void editJob(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		int id = Integer.parseInt(req.getParameter("id"));
-		Job job = jobDao.findJobById(id);
-		req.setAttribute("job", job);
-		req.getRequestDispatcher("/views/job/edit.jsp").forward(req, resp);
-	}
-	private void getJobs(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Job> jobs = jobDao.getList();
-		req.setAttribute("jobs", jobs);
-		req.getRequestDispatcher("/views/job/index.jsp").forward(req, resp);
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String action = req.getServletPath();
-		switch (action) {
-		case UrlConstants.JOB_ADD:
-//			postAdd(req, resp);
-			break;
-		case UrlConstants.JOB_EDIT:
-			try {
-				postEdit(req, resp);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			break;
-		default:
-			break;
-		}
-	}
-	private void postEdit(HttpServletRequest req, HttpServletResponse resp) throws ParseException, IOException {
+	private void postEdit(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		int id = Integer.parseInt(req.getParameter("id"));
 		String name = req.getParameter("name");
 		Date startDate = Date.valueOf(req.getParameter("startDate"));
-		Date endDate = Date.valueOf(req.getParameter("endDate"));
+		Date endDate= Date.valueOf(req.getParameter("endDate"));
 		Job job = new Job(id, name, startDate, endDate);
-		int row = jobDao.updateJob(job);
-		if(row == -1) {
-			req.setAttribute("message", "Update faild");
+		int result = jobDAO.update(job);
+		if(result == -1) {
+			req.setAttribute("message", "Can't update job");
+		}else {
+			resp.sendRedirect(req.getContextPath() + UrlConstants.JOB_LIST);
+		}
+	}
+
+	private void postAdd(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		Job job = new Job();
+		job.setName(req.getParameter("name"));
+		job.setStartDate((Date)Date.valueOf(req.getParameter("startDate")));
+		job.setEndDate(Date.valueOf(req.getParameter("endDate")));
+		int result = jobDAO.add(job);
+		if(result == -1) {
+			req.setAttribute("message", "Can't add job");
 		}else {			
-			resp.sendRedirect(req.getContextPath() + "/job");
+			resp.sendRedirect(req.getContextPath() + UrlConstants.JOB_LIST);
 		}
 	}
 }

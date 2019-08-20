@@ -1,3 +1,4 @@
+<%@page import="java.awt.event.ItemEvent"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -7,15 +8,13 @@
 			<h4 class="page-title">Danh sách quyền</h4>
 		</div>
 		<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-			<a href="<c:url value="/admin/role/add" />" class="btn btn-sm btn-success">Thêm mới</a>
+			<a href="<c:url value="/role/add" />" class="btn btn-sm btn-success">Thêm mới</a>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
 	<!-- /row -->
 	<div class="row">
 		<div class="col-sm-12">
-			<!-- Hien thi loi -->
-			<p>${message }</p>
 			<div class="white-box">
 				<div class="table-responsive">
 					<table class="table" id="example">
@@ -28,13 +27,15 @@
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${roles }" var="role" varStatus="loop">
+							<c:forEach items="${roles}" var="item" varStatus="loop">
 								<tr>
-									<td>${loop.index + 1}</td>
-									<td>${role.name }</td>
-									<td>${role.description }</td>
-									<td><a href="<c:url value="/admin/role/edit?id=${role.id }" />" class="btn btn-sm btn-primary">Sửa</a> <a
-										href="<c:url value="/admin/role/delete?id=${role.id }"/>" class="btn btn-sm btn-danger">Xóa</a></td>
+									<td>${ loop.index + 1 }</td>
+									<td>${ item.name }</td>
+									<td>${ item.description }</td>
+									<td>
+										<a href="<c:url value="/role/edit?id=${ item.id }" />" class="btn btn-sm btn-primary">Sửa</a> 
+										<a href="#" class="btn btn-sm btn-danger">Xóa</a>
+									</td>
 								</tr>
 							</c:forEach>
 						</tbody>

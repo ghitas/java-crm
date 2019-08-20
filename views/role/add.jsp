@@ -12,27 +12,30 @@
 	<div class="row">
 		<div class="col-md-2 col-12"></div>
 		<div class="col-md-8 col-xs-12">
-			<p style="color: red;">${message }</p>
 			<div class="white-box">
-				<form class="form-horizontal form-material" action='<c:url value="${action }"/>' method="post">
+			
+				<!-- HIỂN THỊ LỖI -->
+				<p style="color: red; text-align:center;">${ message }</p>
+			
+				<form class="form-horizontal form-material" action='<c:url value="/role/add"/>' method="post">
 					<div class="form-group">
 						<label class="col-md-12">Tên quyền</label>
 						<div class="col-md-12">
-							<input type="text" placeholder="Tên quyền"
-								class="form-control form-control-line" name="name"/>
+							<input type="text" placeholder="Tên quyền" name="name"
+								class="form-control form-control-line" />
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-md-12">Mô tả</label>
 						<div class="col-md-12">
-							<input type="text" placeholder="Mô tả"
-								class="form-control form-control-line" name="description"/>
+							<input type="text" placeholder="Mô tả" name="description"
+								class="form-control form-control-line" />
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
 							<button type="submit" class="btn btn-success">Add Role</button>
-							<a href="<c:url value="/admin/role" />" class="btn btn-primary">Quay lại</a>
+							<a href="<c:url value="/role" />" class="btn btn-primary">Quay lại</a>
 						</div>
 					</div>
 				</form>

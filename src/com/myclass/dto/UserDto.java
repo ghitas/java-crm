@@ -1,53 +1,26 @@
 package com.myclass.dto;
 
-import java.util.List;
-
-public class UserDto{
+public class UserDto {
 	private int id;
 	private String email;
-	private String fullname;
-	private String roleName;
 	private String password;
+	private String fullname;
 	private String avatar;
-	private int role_id;
-	private List<TaskDto> tasks;
-	public List<TaskDto> getTasks() {
-		return tasks;
-	}
-	public void setTasks(List<TaskDto> tasks) {
-		this.tasks = tasks;
-	}
-	public UserDto(int id, String email, String fullname, String roleName, String password, String avatar,
-			int role_id, List<TaskDto> tasks) {
+	private String roleName;
+	public UserDto() {}
+	
+	
+	public UserDto(int id, String email, String password, String fullname, String avatar, int role_id, String roleName) {
 		super();
 		this.id = id;
 		this.email = email;
+		this.password = password;
 		this.fullname = fullname;
+		this.avatar = avatar;
 		this.roleName = roleName;
-		this.password = password;
-		this.avatar = avatar;
-		this.role_id = role_id;
-		this.tasks = tasks;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getAvatar() {
-		return avatar;
-	}
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-	public int getRole_id() {
-		return role_id;
-	}
-	public void setRole_id(int role_id) {
-		this.role_id = role_id;
-	}
-	public UserDto() {}
+
+
 	public int getId() {
 		return id;
 	}
@@ -69,7 +42,27 @@ public class UserDto{
 	public String getRoleName() {
 		return roleName;
 	}
-	public void setRoleName(String rolename) {
-		this.roleName = rolename;
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 }

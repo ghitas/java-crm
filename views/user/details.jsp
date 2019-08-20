@@ -29,21 +29,21 @@
 						<p class="text-purple">
 							<i class="ti-facebook"></i>
 						</p>
-						<h4>20%</h4>
+						<h4>${open }%</h4>
 						<h6>Chưa thực hiện</h6>
 					</div>
 					<div class="col-md-4 col-sm-4 text-center">
 						<p class="text-blue">
 							<i class="ti-twitter"></i>
 						</p>
-						<h4>50%</h4>
+						<h4>${process }%</h4>
 						<h6>Đang thực hiện</h6>
 					</div>
 					<div class="col-md-4 col-sm-4 text-center">
 						<p class="text-danger">
 							<i class="ti-dribbble"></i>
 						</p>
-						<h4>30%</h4>
+						<h4>${finish }%</h4>
 						<h6>Hoàn thành</h6>
 					</div>
 				</div>
@@ -54,15 +54,15 @@
 				<form class="form-horizontal form-material">
 					<div class="form-group">
 						<label class="col-md-12">Full Name</label>
-						<input type="email" class="form-control form-control-line" value="${user.fullname }">
+						<input type="text" class="form-control form-control-line" value="${user.fullname }"/>
 					</div>
 					<div class="form-group">
 						<label for="example-email" class="col-md-12">Email</label>
-						<input type="email" class="form-control form-control-line" value="${user.email }">
+						<input type="text" class="form-control form-control-line" value="${user.email }"/>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-12">Role</label>
-						<input type="email" class="form-control form-control-line" value="${user.roleName }">
+						<input type="text" class="form-control form-control-line" value="${user.roleName }"/>
 					</div>
 				</form>
 			</div>
@@ -77,12 +77,12 @@
 			<div class="white-box">
 				<h3 class="box-title">Chưa thực hiện</h3>
 				<div class="message-center">
-					<c:forEach items="${open }" var="task">
-						<a href="<c:url value="/job/id=${task.jobId }"/>">
+					<c:forEach items="${openTasks }" var="task" varStatus="loop">
+						<a href="<c:url value="/job"/>">
 							<div class="mail-contnet">
 								<h5>${task.jobName }</h5>
-								<span class="mail-desc">${task.taskName }</span> <span
-									class="time">${task.taskStartTime }</span>
+								<span class="mail-desc">${task.name}</span> <span
+									class="time">${task.startDate }</span>
 							</div>
 						</a>
 					</c:forEach>
@@ -93,19 +93,15 @@
 			<div class="white-box">
 				<h3 class="box-title">Đang thực hiện</h3>
 				<div class="message-center">
-					<a href="#">
-						<div class="mail-contnet">
-							<h5>Pavan kumar</h5>
-							<span class="mail-desc">Just see the my admin!</span> <span
-								class="time">9:30 AM</span>
-						</div>
-					</a> <a href="#">
-						<div class="mail-contnet">
-							<h5>Sonu Nigam</h5>
-							<span class="mail-desc">I've sung a song! See you at</span> <span
-								class="time">9:10 AM</span>
-						</div>
-					</a>
+					<c:forEach items="${processTasks }" var="task" varStatus="loop">
+						<a href="<c:url value="/job"/>">
+							<div class="mail-contnet">
+								<h5>${task.jobName }</h5>
+								<span class="mail-desc">${task.name}</span> <span
+									class="time">${task.startDate }</span>
+							</div>
+						</a>
+					</c:forEach>
 				</div>
 			</div>
 		</div>
@@ -113,19 +109,15 @@
 			<div class="white-box">
 				<h3 class="box-title">Đã hoàn thành</h3>
 				<div class="message-center">
-					<a href="#">
-						<div class="mail-contnet">
-							<h5>Pavan kumar</h5>
-							<span class="mail-desc">Just see the my admin!</span> <span
-								class="time">9:30 AM</span>
-						</div>
-					</a> <a href="#">
-						<div class="mail-contnet">
-							<h5>Sonu Nigam</h5>
-							<span class="mail-desc">I've sung a song! See you at</span> <span
-								class="time">9:10 AM</span>
-						</div>
-					</a>
+					<c:forEach items="${finishTasks }" var="task" varStatus="loop">
+						<a href="<c:url value="/job"/>">
+							<div class="mail-contnet">
+								<h5>${task.jobName }</h5>
+								<span class="mail-desc">${task.name}</span> <span
+									class="time">${task.endDate }</span>
+							</div>
+						</a>
+					</c:forEach>
 				</div>
 			</div>
 		</div>

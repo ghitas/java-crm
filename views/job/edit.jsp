@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<div class="row bg-title">
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title">Cập nhật công việc</h4>
+			<h4 class="page-title">Cập nhật dự án</h4>
 		</div>
 	</div>
 	<!-- /.row -->
@@ -24,13 +24,13 @@
 					<div class="form-group">
 						<label class="col-md-12">Start date</label>
 						<div class="col-md-12">
-							<input type="text" class="form-control form-control-line" name="startDate" value="${job.startDate }">
+							<input type="date" class="form-control form-control-line" name="startDate" value="${job.startDate }">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-md-12">Phone No</label>
 						<div class="col-md-12">
-							<input type="text" class="form-control form-control-line" name="endDate" value="${job.endDate }">
+							<input type="date" class="form-control form-control-line" name="endDate" value="${job.endDate }">
 						</div>
 					</div>
 					<div class="form-group">

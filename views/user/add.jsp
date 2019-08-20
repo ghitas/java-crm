@@ -13,7 +13,7 @@
 		<div class="col-md-2 col-12"></div>
 		<div class="col-md-8 col-xs-12">
 			<div class="white-box">
-				<form class="form-horizontal form-material" action='<c:url value="/manager/user/add" />' method="POST">
+				<form class="form-horizontal form-material" action="<c:url value="/user/add" />" method="POST">
 					<div class="form-group">
 						<label for="example-email" class="col-md-12">Email</label>
 						<div class="col-md-12">
@@ -51,7 +51,7 @@
 					<div class="form-group">
 						<div class="col-sm-12">
 							<button type="submit" class="btn btn-success">Thêm mới</button>
-							<a href="<c:url value="/manager/user" />" class="btn btn-primary">Quay lại</a>
+							<a href="<c:url value="/user" />" class="btn btn-primary">Quay lại</a>
 						</div>
 					</div>
 				</form>

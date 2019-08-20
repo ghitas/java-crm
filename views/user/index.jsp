@@ -7,7 +7,7 @@
 			<h4 class="page-title">Danh sách thành viên</h4>
 		</div>
 		<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-			<a href="<c:url value="/manager/user/add" />" class="btn btn-sm btn-success">Thêm
+			<a href="<c:url value="/user/add" />" class="btn btn-sm btn-success">Thêm
 				mới</a>
 		</div>
 		<!-- /.col-lg-12 -->
@@ -35,9 +35,9 @@
 									<td>${ user.email }</td>
 									<td>${ user.roleName }</td>
 									<td>
-										<a href="<c:url value="/manager/user/edit" />" class="btn btn-sm btn-primary">Sửa</a> 
-										<a href="<c:url value="/manager/user/delete?id=${user.id}" />" class="btn btn-sm btn-danger">Xóa</a> 
-										<a href="<c:url value="/manager/user/details?id=${user.id}" />" class="btn btn-sm btn-info">Xem</a>
+										<a href="<c:url value="/user/edit?id=${user.id }" />" class="btn btn-sm btn-primary">Sửa</a> 
+										<a href="#" class="btn btn-sm btn-danger">Xóa</a> 
+										<a href="<c:url value="/user/details?id=${user.id }" />" class="btn btn-sm btn-info">Xem</a>
 									</td>
 								</tr>
 							</c:forEach>

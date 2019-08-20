@@ -7,11 +7,24 @@ public class TaskDto {
 	private String name;
 	private Date startDate;
 	private Date endDate;
-	private int userId;
+	private String jobName;
 	private int statusId;
 	private String statusName;
-	private int jobId;
-	private String jobName;
+	
+	public TaskDto() {}
+	
+	public TaskDto(int id, String name, Date startDate, Date endDate, String jobName, int statusId,
+			String statusName) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.jobName = jobName;
+		this.statusId = statusId;
+		this.statusName = statusName;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -36,11 +49,11 @@ public class TaskDto {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	public int getUserId() {
-		return userId;
+	public String getJobName() {
+		return jobName;
 	}
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
 	}
 	public int getStatusId() {
 		return statusId;
@@ -53,34 +66,5 @@ public class TaskDto {
 	}
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
-	}
-	public int getJobId() {
-		return jobId;
-	}
-	public void setJobId(int jobId) {
-		this.jobId = jobId;
-	}
-	public String getJobName() {
-		return jobName;
-	}
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
-	}
-	public TaskDto(int id, String name, Date startDate, Date endDate, int userId, int statusId, String statusName,
-			int jobId, String jobName) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.userId = userId;
-		this.statusId = statusId;
-		this.statusName = statusName;
-		this.jobId = jobId;
-		this.jobName = jobName;
-	}
-	public TaskDto() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 }

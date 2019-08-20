@@ -13,46 +13,58 @@ import javax.servlet.http.HttpSession;
 
 import com.myclass.dto.UserDto;
 
-public class AuthFilter implements Filter{
+public class AuthFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		//phia ben tren chain kiem tra request
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse resp = (HttpServletResponse) response;
-		HttpSession session = req.getSession();
+
+		HttpServletRequest req = (HttpServletRequest)request;
+		HttpServletResponse resp = (HttpServletResponse)response;
+		
 		String action = req.getServletPath();
-		if(action.equals("/login")) {
+		
+		// kiem tra loi bat dang nhap lai
+		if(action.equals("/login") || action.startsWith("/error")) {
 			chain.doFilter(request, response);
 			return;
 		}
-		if(action.equals("/logout")) {
-			chain.doFilter(request, response);
-			return;
-		}
-		if(session.getAttribute("USER_LOGIN") == null) {
+		
+		// kiem tra nguoi dung dang nhap
+		HttpSession session = req.getSession();
+		if (session.getAttribute("USER_LOGIN") == null) { 
+			// chuyen trang neu user chua dang nhap
 			resp.sendRedirect(req.getContextPath() + "/login?error=");
 			return;
 		}
-//		Phan quyen
-		UserDto user = (UserDto)session.getAttribute("USER_LOGIN");
-		if(action.startsWith("/admin")) {
+		// ========--------- Role separate ---------============
+		
+		// check role admin
+		if(action.startsWith("/role")) {
+			UserDto user = (UserDto)session.getAttribute("USER_LOGIN");
 			if(user.getRoleName().equals("ROLE_ADMIN")) {
 				chain.doFilter(request, response);
-			}else {
-				resp.sendRedirect(req.getContextPath() + "/error");
-				return;
 			}
-		}else if(action.startsWith("/manager")) {
-			if(user.getRoleName().equals("ROLE_MANAGER") || user.getRoleName().equals("ROLE_ADMIN")) {
-				chain.doFilter(request, response);
-			}else {
-				resp.sendRedirect(req.getContextPath() + "/error");
-				return;
+			else {
+				resp.sendRedirect(req.getContextPath() + "/error/403");
 			}
 		}
-		chain.doFilter(request, response);
+		
+		// check role manager
+		else if(action.startsWith("/user")) {
+			UserDto user = (UserDto)session.getAttribute("USER_LOGIN");
+			if(user.getRoleName().equals("ROLE_MANAGER") || user.getRoleName().equals("ROLE_ADMIN")) {
+				chain.doFilter(request, response);
+			}
+			else {
+				resp.sendRedirect(req.getContextPath() + "/error/403");
+			}
+		}
+		else {
+			chain.doFilter(request, response);
+		}
+		
+
 	}
 
 }

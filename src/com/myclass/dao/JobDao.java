@@ -3,73 +3,153 @@ package com.myclass.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
-
-import com.myclass.connection.JDBConnection;
-import com.myclass.constants.UrlConstants;
+import com.myclass.connection.JDBCConnection;
 import com.myclass.entity.Job;
 
-public class JobDao {
-	public final String SELECT_JOB = "select j.id, j.name, j.start_date, j.end_date from jobs as j";
-	public final String SELECT_JOB_BY_ID = "select j.id, j.name, j.start_date, j.end_date from jobs as j where id=?";
-	public final String UPDATE_JOB = "UPDATE jobs SET name=?, start_date=?, end_date=? WHERE id=?";
-	
-	public List<Job> getList() {
-		List<Job> jobs = null;
-		try(Connection conn = JDBConnection.getConnection()) {
-			PreparedStatement statement = conn.prepareStatement(SELECT_JOB);
-			ResultSet rSet = statement.executeQuery();
-			jobs = new ArrayList<Job>();
-			while (rSet.next()) {
+public class JobDAO {
+	public List<Job> findAll() {
+
+		List<Job> jobs = new ArrayList<Job>();
+
+		try (Connection conn = JDBCConnection.getConnection()) {
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM jobs");
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
 				Job job = new Job();
-				job.setId(rSet.getInt("id"));
-				job.setName(rSet.getString("name"));
-				job.setStartDate(rSet.getDate("start_date"));
-				job.setEndDate(rSet.getDate("end_date"));
+				job.setId(rs.getInt("id"));
+				job.setName(rs.getString("name"));
+				job.setStartDate(rs.getDate("start_date"));
+				job.setEndDate(rs.getDate("end_date"));
 				jobs.add(job);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return jobs;
 	}
-	public Job findJobById(int id) {
+
+//	public List<UserDto> findAllWithRole() {
+//
+//		List<UserDto> users = new ArrayList<UserDto>();
+//		String query = "SELECT u.id, u.email, u.fullname, r.description FROM users u " + 
+//				"JOIN roles r ON u.role_id = r.id";
+//		try (Connection conn = JDBCConnection.getConnection()) {
+//			// Bước 2: Gửi câu truy vấn
+//			// Tạo ra câu truy vấn phù hợp với hệ quản trị CSDL mysql
+//			PreparedStatement statement = conn.prepareStatement(query);
+//			// Thực thi truy vấn lấy dữu liệu
+//			ResultSet rs = statement.executeQuery();
+//
+//			// Bước 3: Xử ký kết quả trả về
+//			while (rs.next()) {
+//				// Tạo User DTO hứng dữ liệu mỗi dòng trả về từ database
+//				UserDto user = new UserDto();
+//				// Set thuộc tính cho User DTO
+//				user.setId(rs.getInt("id"));
+//				user.setEmail(rs.getString("email"));
+//				user.setFullname(rs.getString("fullname"));
+//				user.setRoleName(rs.getString("description"));
+//				
+//				users.add(user);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return users;
+//	}
+//	
+	public Job findById(int id) {
+
 		Job job = new Job();
-		try(Connection conn = JDBConnection.getConnection()) {
-			PreparedStatement statement = conn.prepareStatement(SELECT_JOB_BY_ID);
+
+		try (Connection conn = JDBCConnection.getConnection()) {
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM jobs WHERE id = ?");
 			statement.setInt(1, id);
-			ResultSet rSet = statement.executeQuery();
-			while (rSet.next()) {
-				job.setId(rSet.getInt("id"));
-				job.setName(rSet.getString("name"));
-				job.setStartDate(rSet.getDate("start_date"));
-				job.setEndDate(rSet.getDate("end_date"));
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				job.setId(rs.getInt("id"));
+				job.setName(rs.getString("name"));
+				job.setStartDate(rs.getDate("start_date"));
+				job.setEndDate(rs.getDate("end_date"));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return job;
 	}
-	
-	public int updateJob(Job job) {
-		try(Connection conn = JDBConnection.getConnection()) {
-			PreparedStatement statement = conn.prepareStatement(UPDATE_JOB);
+
+	public int add(Job job) {
+		String query = "INSERT INTO Jobs(name, start_date, end_date) VALUES (?, ?, ?)";
+		try (Connection conn = JDBCConnection.getConnection()) {
+			PreparedStatement statement = conn.prepareStatement(query);
 			statement.setString(1, job.getName());
 			statement.setDate(2, job.getStartDate());
 			statement.setDate(3, job.getEndDate());
-			statement.setInt(4, job.getId());
-			int row = statement.executeUpdate();
-			return row;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			return statement.executeUpdate();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return -1;
 	}
+	
+	public int update(Job job) {
+		String query = "UPDATE jobs SET name=?, start_date=?, end_date=? WHERE id = ?";
+		try (Connection conn = JDBCConnection.getConnection()) {
+			PreparedStatement statement = conn.prepareStatement(query);
+			statement.setString(1, job.getName());
+			statement.setDate(2, job.getStartDate());
+			statement.setDate(3, job.getEndDate());
+			statement.setInt(4, job.getId());
+			int result = statement.executeUpdate();
+			return result;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return - 1;
+	}
+	
+//	public List<JobDto> findTaskByJobId(int id){
+//		List<JobDto> tasks = new ArrayList<JobDto>();
+//		try (Connection conn = JDBCConnection.getConnection()) {
+//			PreparedStatement statement = conn.prepareStatement("select j.id, j.name, j.start_date, j.end_date,"
+//					+ "t.id as task_id, t.name as task_name from jobs as j inner join tasks as t on j.id = t.job_id where j.id=?");
+//			statement.setInt(1, id);
+//			ResultSet rs = statement.executeQuery();
+//			while (rs.next()) {
+//				JobDto jobDto = new JobDto();
+//				jobDto.setId(rs.getInt("id"));
+//				jobDto.setName(rs.getString("name"));
+//				jobDto.setStartDate(rs.getDate("start_date"));
+//				jobDto.setEndDate(rs.getDate("end_date"));
+//				jobDto.setTaskId(rs.getInt("task_id"));
+//				jobDto.setTaskName(rs.getString("task_name"));
+//				tasks.add(jobDto);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return tasks;
+//	}
+//	
+//	public int delete(int id) {
+//		String query = "DELETE FROM users WHERE id = ?";
+//		try (Connection conn = JDBCConnection.getConnection()) {
+//
+//			PreparedStatement statement = conn.prepareStatement(query);
+//			statement.setInt(1, id);
+//
+//			// Thực thi truy vấn lấy dữu liệu
+//			int result = statement.executeUpdate();
+//
+//			return result;
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return - 1;
+//	}
 }

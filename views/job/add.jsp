@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<div class="row bg-title">
 		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-			<h4 class="page-title">Thêm mới thành viên</h4>
+			<h4 class="page-title">Thêm mới dự án</h4>
 		</div>
 	</div>
 	<!-- /.row -->
@@ -13,45 +13,29 @@
 		<div class="col-md-2 col-12"></div>
 		<div class="col-md-8 col-xs-12">
 			<div class="white-box">
-				<form class="form-horizontal form-material" action='<c:url value="/manager/user/add" />' method="POST">
+				<form class="form-horizontal form-material" action='<c:url value="/job/add" />' method="POST">
 					<div class="form-group">
-						<label for="example-email" class="col-md-12">Email</label>
+						<label for="example-email" class="col-md-12">Name:</label>
 						<div class="col-md-12">
-							<input type="email"  class="form-control form-control-line" name="email">
+							<input type="text"  class="form-control form-control-line" name="name">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-md-12">Mật khẩu</label>
+						<label class="col-md-12">Start date:</label>
 						<div class="col-md-12">
-							<input type="password" name="password" class="form-control form-control-line">
+							<input name="startDate" type="date" class="form-control form-control-line">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-md-12">Họ tên</label>
+						<label class="col-md-12">End date:</label>
 						<div class="col-md-12">
-							<input type="text" name="fullname" class="form-control form-control-line">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-12">Avatar</label>
-						<div class="col-md-12">
-							<input type="text" name="avatar" class="form-control form-control-line">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-12">Loại người dùng</label>
-						<div class="col-sm-12">
-							<select class="form-control form-control-line" name="roleId">
-								<c:forEach items="${ roles }" var="item">
-									<option value="${ item.id }">${ item.description }</option>
-								</c:forEach>
-							</select>
+							<input name="endDate" type="date" class="form-control form-control-line">
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-12">
 							<button type="submit" class="btn btn-success">Thêm mới</button>
-							<a href="<c:url value="/manager/user" />" class="btn btn-primary">Quay lại</a>
+							<a href="<c:url value="/job" />" class="btn btn-primary">Quay lại</a>
 						</div>
 					</div>
 				</form>
